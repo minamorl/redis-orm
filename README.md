@@ -1,4 +1,4 @@
-# redisorm
+# redis-orm
 Redis Object-Relational mappings
 
 ## Installation
