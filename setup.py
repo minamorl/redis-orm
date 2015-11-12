@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="redis-ormapper",
+    name="redisorm",
     description="Redis object relation mapper",
     author="minamorl",
     author_email="minamorl@minamorl.com",
