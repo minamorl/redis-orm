@@ -1,11 +1,19 @@
 # redisorm
 Redis Object-Relational mappings
 
+## Installation
+
+```
+pip install redis-orm
+```
+
+Do install carefully because `pip install redisorm` installs other package.
+
 ## What is this?
 
 Redis is fast, reliable, very simple key-value store, but redis-py's interface are not intutibe.
 
-redisorm(redis-orm) provides orm like feature. Like pickle module, it makes your class instances persistent in beautiful way.
+***redisorm(redis-orm)*** provides orm like feature. Like pickle module, it makes your class instances persistent in a beautiful way.
 
 ```python
 import redisorm.core
@@ -51,3 +59,6 @@ OMG! What is happen? Let's look inside of redis.
 2) "prefix:Klass:0"
 3) "prefix:Klass:__latest__"
 ```
+
+All object are automatically converted into as `prefix:classname:id` style.
+`prefix:Klass:__latest__` holds last insert id, and others are hashed objects composed from argument names of `__init__` functions.
