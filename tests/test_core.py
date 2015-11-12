@@ -31,6 +31,18 @@ def test_persistent_basic_save_and_load(test_redis):
     assert loaded.arg01 == obj.arg01
     assert loaded.arg02 == obj.arg02
 
+def test_persistent_auto_increment_id(test_redis):
+    p = redisorm.core.Persistent("paco", r=test_redis)
+    obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
+    obj2 = SamplePersistentObject(arg01="hoge", arg02="fuga")
+    obj3 = SamplePersistentObject(arg01="hoge", arg02="fuga")
+    p.save(obj1)
+    assert obj1.id == "0"
+    p.save(obj2)
+    assert obj2.id == "1"
+    p.save(obj3)
+    assert obj3.id == "2"
+
 def test_persistent_save_and_load_with_int(test_redis):
     p = redisorm.core.Persistent("paco", r=test_redis)
     obj = SamplePersistentObject(arg01=3, arg02="fuga")
