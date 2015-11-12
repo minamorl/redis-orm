@@ -1,4 +1,6 @@
 machine:
+  pre:
+    - redis-server --port 34352
   python:
     version: 3.5.0
 
