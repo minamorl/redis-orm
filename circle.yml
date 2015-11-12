@@ -1,8 +1,8 @@
 machine:
-   environment:
-     TEST_REDIS_PORT: 34352
-   pre:
-    - redis-server --port $TEST_REDIS_PORT
+  environment:
+    TEST_REDIS_PORT: 34352
+  pre:
+    - redis-server --port 34352 &
   python:
     version: 3.5.0
 
