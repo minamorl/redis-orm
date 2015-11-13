@@ -99,3 +99,25 @@ print(type(obj.created_at.retrive()))
 # <class 'redisorm.proxy.DatetimeProxy'>
 # <class 'datetime.datetime'>
 ```
+
+## Advanced Proxy Receipe
+
+### hasMany (or belongsTo)
+
+```python
+class User(redisorm.core.PersistentData):
+  def __init__(self, id=None, user=None):
+    self.id = id
+    self.memo_list = PersistentListProxy()
+  
+  def get_all_memo():
+    return self.memo_list.retrive()
+
+class Memo(redisorm.core.PersistentData):
+  def __init__(self, id=None, memor=None):
+    self.id = id
+    self.author = PersistentProxy()
+
+  def get_author():
+    return self.author.retrive()
+```
