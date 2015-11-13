@@ -52,3 +52,13 @@ class BooleanProxy(BaseProxy):
             wrapped = False
 
         super().__init__(wrapped)
+
+
+class PersistentListProxy(BaseProxy):
+
+    def _retrive(self):
+        for x in self:
+            yield x.retrive()
+
+    def retrive(self):
+        return list(self._retrive())
