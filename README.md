@@ -62,5 +62,40 @@ OMG! What is happen? Let's look inside of redis.
 3) "prefix:Klass:__latest__"
 ```
 
-All object are automatically converted into as `prefix:classname:id` style.
-`prefix:Klass:__latest__` holds last insert id, and others are hashed objects composed from argument names of `__init__` functions.
+All object are automatically converted into str, and all `id` is managed by `prefix:classname:__latest__` value.
+
+By default, `prefix:Klass:__latest__` holds last insert id, and others are hashed objects composed from argument names of `__init__` functions.
+
+## Restriction
+
+All kwargs of `__init__` function which derivered `PersistentData` classes must be string representable except `self`, and they must have default values.
+
+However, in a real world, we have to handle vary datatypes such as DateTime, int, Boolean, and so on. If you need to handle those types without thinking about cast, you can use proxy objects.
+
+## Proxies
+
+
+### DatetimeProxy
+```python
+import datetime
+import redisorm.core
+from redisorm.proxy import DatetimeProxy
+
+p = redisorm.core.Persistent("example")
+
+class SampleObject(redisorm.core.PersistentData):
+  def __init__(self, created_at=None, id=None):
+    self.id = id
+    self.created_at = DatetimeProxy(created_at) or DatetimeProxy(datetime.datetime.now())
+
+p.save(SampleObject())
+obj = p.load(SampleObject, 0)
+
+print(type(obj.created_at))
+# Retrive as 'actual' data type.
+print(type(obj.created_at.retrive()))
+
+# Results are:
+# <class 'redisorm.proxy.DatetimeProxy'>
+# <class 'datetime.datetime'>
+```
