@@ -9,13 +9,12 @@ Redis Object-Relational mappings
 pip install redis-orm
 ```
 
-Do install carefully because `pip install redisorm` installs other package.
-
 ## What is this?
 
-Redis is fast, reliable, very simple key-value store, but redis-py's interface are not intutibe.
+Redis is a fast, reliable, very simple key-value store.  
+But there's a problem: redis-py's interface is not well-designed.
 
-***redisorm(redis-orm)*** provides orm like feature. Like pickle module, it makes your class instances persistent in a beautiful way.
+***redisorm(redis-orm)*** provides orm-like feature. Like pickle module, it makes your class instances persistent in a beautiful way.
 
 ```python
 import redisorm.core
@@ -45,7 +44,7 @@ j2 = load(Klass, 1)
 print(j2.name)
 ```
 
-Results:
+Result:
 ```
 0
 1
@@ -53,7 +52,7 @@ foo
 bar
 ```
 
-OMG! What is happen? Let's look inside of redis.
+OMG! What is happening? Let's look inside into redis.
 ```
 % redis-cli
 127.0.0.1:6379> keys *
@@ -62,15 +61,15 @@ OMG! What is happen? Let's look inside of redis.
 3) "prefix:Klass:__latest__"
 ```
 
-All object are automatically converted into str, and all `id` is managed by `prefix:classname:__latest__` value.
+All object are automatically converted into `str`, and all `id` is managed by `prefix:classname:__latest__` value.
 
-By default, `prefix:Klass:__latest__` holds last insert id, and others are hashed objects composed from argument names of `__init__` functions.
+By default, `prefix:Klass:__latest__` holds last inserted id, and others are hashed objects composed from argument names of `__init__` functions.
 
 ## Restriction
 
-All kwargs of `__init__` function which derivered `PersistentData` classes must be string representable except `self`, and they must have default values.
+All kwargs of `__init__` function which derived from `PersistentData` classes must be string representable except for `self`, and they also must have default values.
 
-However, in a real world, we have to handle vary datatypes such as DateTime, int, Boolean, and so on. If you need to handle those types without thinking about cast, you can use proxy objects.
+However, in a real world, we have to handle various datatypes such as `DateTime`, `int`, `Boolean`, and so on. If you need to handle those types without thinking about casting, you can use proxy objects.
 
 ## Proxies
 
@@ -110,7 +109,7 @@ There are several proxies:
 
 ## Advanced Proxy Receipe: hasMany (or belongsTo) relationships 
 
-**redisorm** replesents object relationships in pythonic way. Look this example:
+**redisorm** represents object relationships in pythonic way. Look at this example:
 
 ```python
 class User(redisorm.core.PersistentData):
@@ -130,9 +129,9 @@ class Memo(redisorm.core.PersistentData):
     return self.author.retrive()
 ```
 
-In example, User has many Memo. Memo also can get author. 
+In this example, User has many Memo. Memo can also possess an author. 
 
-redisorm do not generate any magic method explictly. You can implement getters implictly, by comfortable way.
+redisorm do not generate any magic method implicitly. You can implement getters explicitly, by your comfortable way.
 
 
 ## Author
