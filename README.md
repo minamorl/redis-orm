@@ -100,9 +100,17 @@ print(type(obj.created_at.retrive()))
 # <class 'datetime.datetime'>
 ```
 
-## Advanced Proxy Receipe
+There are several proxies:
 
-### hasMany (or belongsTo)
+- DatetimeProxy
+- IntProxy
+- BooleanProxy
+- PersistentProxy
+- PersistentListProxy
+
+## Advanced Proxy Receipe: hasMany (or belongsTo) relationships 
+
+**redisorm** replesents object relationships in pythonic way. Look this example:
 
 ```python
 class User(redisorm.core.PersistentData):
@@ -121,3 +129,11 @@ class Memo(redisorm.core.PersistentData):
   def get_author():
     return self.author.retrive()
 ```
+
+In example, User has many Memo. Memo also can get author. 
+
+redisorm do not generate any magic method explictly. You can implement getters implictly, by comfortable way.
+
+
+## Author
+minamorl
