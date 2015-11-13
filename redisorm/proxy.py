@@ -1,10 +1,12 @@
 import wrapt
 import datetime
 
+
 class BaseProxy(wrapt.ObjectProxy):
-    
+
     def retrive(self):
         raise NotImplementedError()
+
 
 class PersistentProxy(BaseProxy):
 
@@ -29,10 +31,19 @@ class DatetimeProxy(BaseProxy):
         return str(self.__wrapped__.strftime(DatetimeProxy._format))
 
 
+class IntProxy(BaseProxy):
+
+    def retrive(self):
+        try:
+            return int(self)
+        except TypeError:
+            return 0
+
+
 class BooleanProxy(BaseProxy):
 
     def retrive(self):
-        return self == "True" or self == True
+        return self == "True" or self
 
     def __init__(self, wrapped):
         if wrapped == "True" or wrapped is True:

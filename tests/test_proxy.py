@@ -1,6 +1,6 @@
 import datetime
 import redisorm.core
-from redisorm.proxy import DatetimeProxy, BooleanProxy, PersistentProxy
+from redisorm.proxy import DatetimeProxy, BooleanProxy, PersistentProxy, IntProxy
 import redis
 import pytest
 import os
@@ -20,6 +20,15 @@ def test_datetime_proxy():
     dt = DatetimeProxy(now)
     assert now == dt
     assert str(dt) == str(dt.retrive())
+
+
+def test_int_proxy():
+    i = 3
+    proxied = IntProxy(i)
+    assert i == proxied
+    assert str(i) == str(proxied)
+    assert i == proxied.retrive()
+
 
 
 def test_boolean_proxy():
@@ -48,12 +57,7 @@ def test_persistent_proxy(test_redis):
     p.save(child)
     assert str(child) == "0"
 
-def test_persistent_proxy(test_redis):
-    p = redisorm.core.Persistent("paco", r=test_redis)
-    child = SampleChildModel()
-    p.save(child)
-
     parent = SampleModel(child=child)
     p.save(parent)
 
-    parent.child.retrive(SampleChildModel, p).id == "0"
+    assert parent.child.retrive(SampleChildModel, p).id == "0"
