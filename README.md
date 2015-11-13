@@ -1,6 +1,8 @@
 # redis-orm
 Redis Object-Relational mappings
 
+[![Circle CI](https://circleci.com/gh/minamorl/redis-orm.svg?style=svg)](https://circleci.com/gh/minamorl/redis-orm)
+
 ## Installation
 
 ```
