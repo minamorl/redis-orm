@@ -112,21 +112,23 @@ There are several proxies:
 **redisorm** represents object relationships in pythonic way. Look at this example:
 
 ```python
+persistent = redisorm.core.Persistent("example")
+
 class User(redisorm.core.PersistentData):
   def __init__(self, id=None, user=None):
     self.id = id
-    self.memo_list = PersistentListProxy()
+    self.memo_list = PersistentListProxy(Memo)
   
   def get_all_memo():
-    return self.memo_list.retrive()
+    return self.memo_list.retrive(p=persistent)
 
 class Memo(redisorm.core.PersistentData):
-  def __init__(self, id=None, memor=None):
+  def __init__(self, id=None, author=None):
     self.id = id
-    self.author = PersistentProxy()
+    self.author = PersistentProxy(Author)
 
   def get_author():
-    return self.author.retrive()
+    return self.author.retrive(p=persistent)
 ```
 
 In this example, User has many Memo. Memo can also possess an author. 

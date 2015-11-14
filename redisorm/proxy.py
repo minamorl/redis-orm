@@ -10,7 +10,12 @@ class BaseProxy(wrapt.ObjectProxy):
 
 class PersistentProxy(BaseProxy):
 
-    def retrive(self, cls, p):
+    def __init__(self, wrapped, cls=None, p=None):
+        self.cls = cls
+        self.p = p
+        super().__init__(wrapped)
+
+    def retrive(self, cls=self.cls, p=self.p):
         return p.find(cls, lambda x: x.id == str(self))
 
     def __str__(self):
@@ -46,19 +51,21 @@ class BooleanProxy(BaseProxy):
         return self == "True" or self
 
     def __init__(self, wrapped):
-        if wrapped == "True" or wrapped is True:
-            wrapped = True
-        else:
-            wrapped = False
-
+        wrapped = wrapped == "True" or wrapped is True
         super().__init__(wrapped)
 
 
 class PersistentListProxy(BaseProxy):
 
-    def _retrive(self):
-        for x in self:
-            yield x.retrive()
+    def __init__(self, wrapped, cls=None, p=None):
+        self.cls = cls
+        self.p = p
+        super().__init__(wrapped)
 
-    def retrive(self):
-        return list(self._retrive())
+
+    def _retrive(self, cls, p):
+        for x in self:
+            yield x.retrive(cls, p)
+
+    def retrive(self, cls=self.cls, p=self.p):
+        return list(self._retrive(cls, p))
