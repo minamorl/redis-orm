@@ -117,18 +117,18 @@ persistent = redisorm.core.Persistent("example")
 class User(redisorm.core.PersistentData):
   def __init__(self, id=None, user=None):
     self.id = id
-    self.memo_list = PersistentListProxy(Memo)
+    self.memo_list = PersistentListProxy()
   
   def get_all_memo():
-    return self.memo_list.retrive(p=persistent)
+    return self.memo_list.retrive(Memo, persistent)
 
 class Memo(redisorm.core.PersistentData):
   def __init__(self, id=None, author=None):
     self.id = id
-    self.author = PersistentProxy(Author)
+    self.author = PersistentProxy()
 
   def get_author():
-    return self.author.retrive(p=persistent)
+    return self.author.retrive(Author, persistent)
 ```
 
 In this example, User has many Memo. Memo can also possess an author. 
