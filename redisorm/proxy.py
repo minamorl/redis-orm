@@ -10,14 +10,10 @@ class BaseProxy(wrapt.ObjectProxy):
 
 class PersistentProxy(BaseProxy):
 
-    def __init__(self, wrapped, cls=None, p=None):
+    def __init__(self, wrapped):
         super().__init__(wrapped)
-        self.cls = cls
-        self.p = p
 
-    def retrive(self, cls=None, p=None):
-        cls = cls or self.cls
-        p = p or self.p
+    def retrive(self, cls, p):
         return p.find(cls, lambda x: x.id == str(self))
 
     def __str__(self):
