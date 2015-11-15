@@ -83,7 +83,7 @@ class Persistent():
             return
         _range = range(int(max_id) + 1)
         if reverse is True:
-            _range = range(int(max_id), 0, -1)
+            _range = range(int(max_id), -1, -1)
         for i in _range:
             yield self.load(cls, str(i))
 
