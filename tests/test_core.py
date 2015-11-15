@@ -1,8 +1,7 @@
 import redisorm.core
 import os
 import pytest
-import redis
-
+import redis 
 @pytest.fixture
 def test_redis():
     port = os.environ.get("TEST_REDIS_PORT")
@@ -43,10 +42,14 @@ def test_persistent_auto_increment_id(test_redis):
     p.save(obj3)
     assert obj3.id == "2"
 
-def test_persistent_save_and_load_with_int(test_redis):
+def test_persistent_find_by(test_redis):
     p = redisorm.core.Persistent("paco", r=test_redis)
-    obj = SamplePersistentObject(arg01=3, arg02="fuga")
-    p.save(obj)
-    loaded = p.load(SamplePersistentObject, 0)
-    assert loaded.arg01 == str(obj.arg01)
-    assert loaded.arg02 == obj.arg02
+    obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
+    obj2 = SamplePersistentObject(arg01="hoge", arg02="fuga")
+    obj3 = SamplePersistentObject(arg01="hoge", arg02="this is target")
+    p.save(obj1)
+    p.save(obj2)
+    p.save(obj3)
+    loaded = p.find_by(SamplePersistentObject, "arg02", "this is target")
+    assert loaded.arg01 == str(obj3.arg01)
+    assert loaded.arg02 == obj3.arg02

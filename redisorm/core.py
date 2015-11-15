@@ -90,14 +90,16 @@ class Persistent():
                 return item
         return None
 
-    def fnd_by(self, cls, key, value):
+    def find_by(self, cls, key, value):
         max_id = self.get_max_id(cls)
+        classname = cls.__name__
         if max_id is None:
             return
         for i in range(int(max_id) + 1):
             name = self.key_separator.join([self.prefix, classname, str(i)])
             if self.r.hget(name, key) == value:
-                return self.load(cls, name)
+                return self.load(cls, i)
+        return None
 
     def get_max_id(self, cls):
         classname = cls.__name__
