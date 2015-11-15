@@ -34,13 +34,21 @@ class Persistent():
 
     def update_id(self, obj):
         classname = obj.__class__.__name__
-        if self.r.get(self.key_separator.join([self.prefix, classname, self.id_count])) is not None:
-            obj.id = int(self.r.get(self.key_separator.join([self.prefix, classname, self.id_count]))) + 1
-            self.r.set(self.key_separator.join([self.prefix, classname, self.id_count]), obj.id)
+        _id = self.get_last_insert_id(classname)
+        if _id is not None:
+            obj.id = _id + 1
+            self.set_id(classname, obj.id)
         else:
             obj.id = 0
-            self.r.set(self.key_separator.join([self.prefix, classname, self.id_count]), "0")
+            self.set_id(classname, obj.id)
         return obj.id
+
+    def get_last_insert_id(self, classname):
+        _id = self.r.get(self.key_separator.join([self.prefix, classname, self.id_count]))
+        return _id if _id is None else int(_id)
+
+    def set_id(self, classname, id):
+        return self.r.set(self.key_separator.join([self.prefix, classname, self.id_count]), str(id)) 
 
     def save(self, obj):
         r = self.r
@@ -70,10 +78,9 @@ class Persistent():
         return obj
 
     def load_all(self, cls):
-        classname = cls.__name__
-        if not self.r.exists(self.key_separator.join([self.prefix, classname, self.id_count])):
+        max_id = self.get_max_id(cls)
+        if max_id is None:
             return
-        max_id = self.r.get(self.key_separator.join([self.prefix, classname, self.id_count]))
         for i in range(int(max_id) + 1):
             yield self.load(cls, str(i))
 
@@ -82,3 +89,18 @@ class Persistent():
             if cond(item) is True:
                 return item
         return None
+
+    def fnd_by(self, cls, key, value):
+        max_id = self.get_max_id(cls)
+        if max_id is None:
+            return
+        for i in range(int(max_id) + 1):
+            name = self.key_separator.join([self.prefix, classname, str(i)])
+            if self.r.hget(name, key) == value:
+                return self.load(cls, name)
+
+    def get_max_id(self, cls):
+        classname = cls.__name__
+        if not self.r.exists(self.key_separator.join([self.prefix, classname, self.id_count])):
+            return None
+        return int(self.r.get(self.key_separator.join([self.prefix, classname, self.id_count])))
