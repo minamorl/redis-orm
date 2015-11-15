@@ -77,11 +77,14 @@ class Persistent():
         obj.after_load()
         return obj
 
-    def load_all(self, cls):
+    def load_all(self, cls, reverse=False):
         max_id = self.get_max_id(cls)
         if max_id is None:
             return
-        for i in range(int(max_id) + 1):
+        _range = range(int(max_id) + 1)
+        if reverse is True:
+            _range = range(int(max_id), 0, -1)
+        for i in _range:
             yield self.load(cls, str(i))
 
     def find(self, cls, cond):
