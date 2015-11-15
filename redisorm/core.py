@@ -87,6 +87,17 @@ class Persistent():
         for i in _range:
             yield self.load(cls, str(i))
 
+    def load_all_only_keys(self, cls, key, reverse=False):
+        max_id = self.get_max_id(cls)
+        classname = cls.__name__
+        if max_id is None:
+            return
+        _range = range(int(max_id) + 1)
+        if reverse is True:
+            _range = range(int(max_id), -1, -1)
+        for i in _range:
+            yield self.r.hget(self.key_separator.join([self.prefix, classname, str(i)]), key)
+
     def find(self, cls, cond):
         for item in self.load_all(cls):
             if cond(item) is True:
