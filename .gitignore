@@ -8,3 +8,4 @@ tags
 .envrc
 .cache/
 *.rdb
+.plans.py
