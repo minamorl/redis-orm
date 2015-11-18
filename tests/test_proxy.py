@@ -1,5 +1,5 @@
 import datetime
-import redisorm.core
+import redisorm
 from redisorm.proxy import DatetimeProxy, BooleanProxy, PersistentProxy, IntProxy, PersistentListProxy
 import redis
 import pytest

@@ -1,4 +1,4 @@
-import redisorm.core
+import redisorm
 import os
 import pytest
 import redis 
@@ -53,3 +53,30 @@ def test_persistent_find_by(test_redis):
     loaded = p.find_by(SamplePersistentObject, "arg02", "this is target")
     assert loaded.arg01 == str(obj3.arg01)
     assert loaded.arg02 == obj3.arg02
+
+def test_persistent_load_all_only_keys(test_redis):
+    p = redisorm.core.Persistent("paco", r=test_redis)
+    obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
+    obj2 = SamplePersistentObject(arg01="hoge", arg02="reversed")
+    obj3 = SamplePersistentObject(arg01="hoge", arg02="this is target")
+    p.save(obj1)
+    p.save(obj2)
+    p.save(obj3)
+    loaded = p.load_all_only_keys(SamplePersistentObject, "arg02")
+    assert obj1.arg02 == next(loaded)
+    assert obj2.arg02 == next(loaded)
+    assert obj3.arg02 == next(loaded)
+
+def test_persistent_load_all_only_keys_reverse_true(test_redis):
+    p = redisorm.core.Persistent("paco", r=test_redis)
+    obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
+    obj2 = SamplePersistentObject(arg01="hoge", arg02="reversed")
+    obj3 = SamplePersistentObject(arg01="hoge", arg02="this is target")
+    p.save(obj1)
+    p.save(obj2)
+    p.save(obj3)
+    loaded = p.load_all_only_keys(SamplePersistentObject, "arg02", reverse=True)
+    assert obj3.arg02 == next(loaded)
+    assert obj2.arg02 == next(loaded)
+    assert obj1.arg02 == next(loaded)
+
