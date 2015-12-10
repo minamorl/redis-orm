@@ -80,3 +80,20 @@ def test_persistent_load_all_only_keys_reverse_true(test_redis):
     assert obj2.arg02 == next(loaded)
     assert obj1.arg02 == next(loaded)
 
+def test_delete(test_redis):
+    p = redisorm.core.Persistent("paco", r=test_redis)
+    obj = SamplePersistentObject(arg01="hoge", arg02="fuga")
+    p.save(obj)
+    assert p.load(SamplePersistentObject, 0) != None
+    p.delete(obj)
+    assert p.load(SamplePersistentObject, 0) == None
+
+def test_delete2(test_redis):
+    p = redisorm.core.Persistent("paco", r=test_redis)
+    obj = SamplePersistentObject(arg01="hoge", arg02="fuga")
+    obj2 = SamplePersistentObject(arg01="hoge", arg02="fuga")
+    p.save(obj)
+    p.save(obj2)
+    p.delete(obj)
+    assert len(list(p.load_all(SamplePersistentObject))) == 2
+    assert list(p.load_all(SamplePersistentObject))[0] == None
