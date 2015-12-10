@@ -3,6 +3,7 @@ import redis
 import inspect
 
 
+DELETED = "__deleted__"
 class PersistentData():
 
     def before_save(self):
@@ -71,6 +72,10 @@ class Persistent():
         key = str(key)
         r = self.r
         classname = cls.__name__
+
+        if r.hget(self.key_separator.join([self.prefix, classname, key]), DELETED):
+            return None
+
         params = inspect.signature(cls.__init__).parameters.values()
         obj = cls(**{param.name: r.hget(self.key_separator.join([self.prefix, classname, key]), param.name) for param in params
             if hasattr(param, "name") and param.name != "self" and r.hget(self.key_separator.join([self.prefix, classname, key]), param.name) is not None})
@@ -120,3 +125,10 @@ class Persistent():
         if not self.r.exists(self.key_separator.join([self.prefix, classname, self.id_count])):
             return None
         return int(self.r.get(self.key_separator.join([self.prefix, classname, self.id_count])))
+
+    def delete(self, obj):
+        classname = obj.__class__.__name__
+        if obj.id is None:
+            return False
+        return self.r.hset(self.key_separator.join([self.prefix, classname, obj.id]), DELETED, "1")
+
