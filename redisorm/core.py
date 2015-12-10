@@ -82,13 +82,15 @@ class Persistent():
         obj.after_load()
         return obj
 
-    def load_all(self, cls, reverse=False):
+    def load_all(self, cls, _range=None, reverse=False):
         max_id = self.get_max_id(cls)
         if max_id is None:
             return
-        _range = range(int(max_id) + 1)
-        if reverse is True:
-            _range = range(int(max_id), -1, -1)
+        if _range is None:
+            if reverse:
+                _range = range(int(max_id), -1, -1)
+            else:
+                _range = range(int(max_id) + 1)
         for i in _range:
             yield self.load(cls, str(i))
 
