@@ -32,7 +32,7 @@ class Klass(redisorm.core.PersistentData):
 
 # Or you can do this in more easier way (from v0.1.1)
 
-Klass = redisorm.create_model(id=None, name=None)
+Klass = redisorm.create_model("Klass", id=None, name=None)
 
 #Save stuffs
 k1 = Klass(name="foo")
