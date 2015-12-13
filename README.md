@@ -25,7 +25,7 @@ save = p.save
 load = p.load
 
 class Klass(redisorm.core.PersistentData):
-  def__init__(self, id=None, name=None):
+  def __init__(self, id=None, name=None):
     self.id = id
     self.name = name
    
