@@ -1,6 +1,8 @@
 # redis-orm
 Redis Object-Relational mappings
 
+[![PyPI version](https://badge.fury.io/py/redis-orm.svg)](https://badge.fury.io/py/redis-orm)
+
 [![Circle CI](https://circleci.com/gh/minamorl/redis-orm.svg?style=svg)](https://circleci.com/gh/minamorl/redis-orm)
 
 ## Installation
