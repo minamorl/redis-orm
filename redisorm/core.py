@@ -18,21 +18,20 @@ class MetaPersistentData(type):
             if isinstance(cls.__dict__[attr], Column):
                 attrs["_columns"].append(attr)
         return super().__new__(mcs, name, bases, attrs)
-    
+
 
 class Column():
+
     def __init__(self, type=None, default=None):
         self.type = type
         self.default = default
+
 
 class PersistentData(metaclass=MetaPersistentData):
 
     def __init__(self, *args, **kwargs):
         for column in self._columns:
             self.__dict__[column] = kwargs.get(column, None)
-            
-
-
 
     @classmethod
     def get_columns(cls):

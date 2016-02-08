@@ -4,6 +4,7 @@ import datetime
 
 
 class BaseProxy(wrapt.ObjectProxy):
+
     def retrive(self):
         raise NotImplementedError()
 
@@ -25,8 +26,8 @@ class PersistentProxy(BaseProxy):
 
 class DatetimeProxy(BaseProxy):
 
-    _format = "%Y-%m-%d %H:%M:%S" 
-    
+    _format = "%Y-%m-%d %H:%M:%S"
+
     def retrive(self):
         return datetime.datetime.strptime(str(self), DatetimeProxy._format)
 
@@ -60,16 +61,14 @@ class PersistentListProxy(list):
         self.cls = cls
         self.p = p
 
-
     def _retrive(self, cls, p):
         for x in self:
             argument_length = len(inspect.signature(x.retrive).parameters)
-            
+
             if argument_length == 0:
                 yield x.retrive()
             else:
                 yield x.retrive(cls, p)
-
 
     def retrive(self, cls=None, p=None):
         cls = cls or self.cls

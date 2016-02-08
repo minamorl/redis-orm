@@ -1,5 +1,6 @@
 from . import core, proxy
 
+
 def create_model(__name, **kwargs):
     attrs = {}
 

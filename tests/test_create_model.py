@@ -1,7 +1,8 @@
 import redisorm
 import os
 import pytest
-import redis 
+import redis
+
 
 @pytest.fixture
 def test_redis():
@@ -10,6 +11,7 @@ def test_redis():
     r.ping()
     r.flushdb()
     return r
+
 
 def test_create_model(test_redis):
     p = redisorm.core.Persistent("paco", r=test_redis)

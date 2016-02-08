@@ -30,7 +30,6 @@ def test_int_proxy():
     assert i == proxied.retrive()
 
 
-
 def test_boolean_proxy():
     assert "False" == str(BooleanProxy(False))
     assert "False" == str(BooleanProxy("False"))
@@ -61,10 +60,12 @@ def test_persistent_proxy(test_redis):
 
     assert parent.child.retrive(SampleChildModel, p).id == "0"
 
+
 def test_persistent_list_proxy(test_redis):
     p = redisorm.core.Persistent("paco", r=test_redis)
     obj = PersistentListProxy([])
     assert obj == []
+
 
 def test_persistent_list_proxy_check_retrive_chain(test_redis):
     p = redisorm.core.Persistent("paco", r=test_redis)
