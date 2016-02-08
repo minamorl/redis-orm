@@ -4,7 +4,13 @@ import inspect
 
 
 DELETED = "__deleted__"
+
+
 class PersistentData():
+
+    @classmethod
+    def get_columns(cls):
+        return [x for x in inspect.signature(cls.__init__).parameters.values() if str(x) is not "self"]
 
     def before_save(self):
         pass
@@ -49,12 +55,12 @@ class Persistent():
         return _id if _id is None else int(_id)
 
     def set_id(self, classname, id):
-        return self.r.set(self.key_separator.join([self.prefix, classname, self.id_count]), str(id)) 
+        return self.r.set(self.key_separator.join([self.prefix, classname, self.id_count]), str(id))
 
     def save(self, obj):
         r = self.r
         classname = obj.__class__.__name__
-        params = inspect.signature(obj.__init__).parameters.values()
+        params = obj.get_columns()
         obj.before_save()
 
         obj.id = obj.id or self.update_id(obj)
@@ -76,9 +82,9 @@ class Persistent():
         if r.hget(self.key_separator.join([self.prefix, classname, key]), DELETED):
             return None
 
-        params = inspect.signature(cls.__init__).parameters.values()
+        params = cls.get_columns()
         obj = cls(**{param.name: r.hget(self.key_separator.join([self.prefix, classname, key]), param.name) for param in params
-            if hasattr(param, "name") and param.name != "self" and r.hget(self.key_separator.join([self.prefix, classname, key]), param.name) is not None})
+                     if hasattr(param, "name") and param.name != "self" and r.hget(self.key_separator.join([self.prefix, classname, key]), param.name) is not None})
         obj.after_load()
         return obj
 
@@ -133,4 +139,3 @@ class Persistent():
         if obj.id is None:
             return False
         return self.r.hset(self.key_separator.join([self.prefix, classname, obj.id]), DELETED, "1")
-
