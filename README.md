@@ -19,14 +19,14 @@ But there's a problem: redis-py's interface is not well-designed.
 ***redisorm(redis-orm)*** provides orm-like feature. Like pickle module, it makes your class instances persistent in a beautiful way.
 
 ```python
-import redisorm.core
+from redisorm.core import Persistent, PersistentData, Column
 
 
-p = redisorm.core.Persistent("prefix")
+p = Persistent("prefix")
 
-class Klass(redisorm.core.PersistentData):
-  id = None
-  name = None
+class Klass(PersistentData):
+  id = Column()
+  name = Column()
    
 
 #Save stuffs
