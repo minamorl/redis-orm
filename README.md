@@ -23,8 +23,6 @@ import redisorm.core
 
 
 p = redisorm.core.Persistent("prefix")
-save = p.save
-load = p.load
 
 class Klass(redisorm.core.PersistentData):
   def __init__(self, id=None, name=None):
@@ -38,16 +36,16 @@ Klass = redisorm.create_model("Klass", id=None, name=None)
 
 #Save stuffs
 k1 = Klass(name="foo")
-save(k1)
+p.save(k1)
 print(k1.id)
 k2 = Klass(name="bar")
-save(k2)
+p.save(k2)
 print(k2.id)
 
 #Load
-j1 = load(Klass, 0)
+j1 = p.load(Klass, 0)
 print(j1.name)
-j2 = load(Klass, 1)
+j2 = p.load(Klass, 1)
 print(j2.name)
 ```
 
