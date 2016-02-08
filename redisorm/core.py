@@ -33,11 +33,6 @@ class PersistentData(metaclass=MetaPersistentData):
         for column in self._columns:
             self.__dict__[column] = kwargs.get(column, None)
 
-    @classmethod
-    def get_columns(cls):
-        #  return [x for x in inspect.signature(cls.__init__).parameters.values() if str(x) is not "self"]
-        return cls._columns
-
     def before_save(self):
         pass
 
@@ -86,13 +81,12 @@ class Persistent():
     def save(self, obj):
         r = self.r
         classname = obj.__class__.__name__
-        params = obj.get_columns()
         obj.before_save()
 
         obj.id = obj.id or self.update_id(obj)
         obj.id = str(obj.id)
 
-        for param in params:
+        for param in obj._columns:
             if obj.__dict__[param] is not None:
                 r.hset(self.key_separator.join([self.prefix, classname, obj.id]), param, getattr(obj, param))
             else:
@@ -108,8 +102,7 @@ class Persistent():
         if r.hget(self.key_separator.join([self.prefix, classname, key]), DELETED):
             return None
 
-        params = cls.get_columns()
-        obj = cls(**{param: r.hget(self.key_separator.join([self.prefix, classname, key]), param) for param in params
+        obj = cls(**{param: r.hget(self.key_separator.join([self.prefix, classname, key]), param) for param in cls._columns
                      if param != "self" and r.hget(self.key_separator.join([self.prefix, classname, key]), param) is not None})
         obj.after_load()
         return obj
