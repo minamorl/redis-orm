@@ -1,4 +1,4 @@
-import redisorm
+from redisorm.core import *
 import os
 import pytest
 import redis 
@@ -11,19 +11,18 @@ def test_redis():
     return r
 
 def test_persistent_prefix():
-    redisorm.core.Persistent("paco")
+    Persistent("paco")
 
 def test_persistent_set_redis(test_redis):
-    redisorm.core.Persistent("paco", r=test_redis)
+    Persistent("paco", r=test_redis)
 
-class SamplePersistentObject(redisorm.core.PersistentData):
-    def __init__(self, id=None, arg01="", arg02=""):
-        self.id = id
-        self.arg01 = arg01
-        self.arg02 = arg02
+class SamplePersistentObject(PersistentData):
+    id = Column()
+    arg01 = Column(default="")
+    arg02 = Column(default="")
 
 def test_persistent_basic_save_and_load(test_redis):
-    p = redisorm.core.Persistent("paco", r=test_redis)
+    p = Persistent("paco", r=test_redis)
     obj = SamplePersistentObject(arg01="hoge", arg02="fuga")
     p.save(obj)
     loaded = p.load(SamplePersistentObject, 0)
@@ -31,7 +30,7 @@ def test_persistent_basic_save_and_load(test_redis):
     assert loaded.arg02 == obj.arg02
 
 def test_persistent_auto_increment_id(test_redis):
-    p = redisorm.core.Persistent("paco", r=test_redis)
+    p = Persistent("paco", r=test_redis)
     obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj2 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj3 = SamplePersistentObject(arg01="hoge", arg02="fuga")
@@ -43,7 +42,7 @@ def test_persistent_auto_increment_id(test_redis):
     assert obj3.id == "2"
 
 def test_persistent_find_by(test_redis):
-    p = redisorm.core.Persistent("paco", r=test_redis)
+    p = Persistent("paco", r=test_redis)
     obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj2 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj3 = SamplePersistentObject(arg01="hoge", arg02="this is target")
@@ -55,7 +54,7 @@ def test_persistent_find_by(test_redis):
     assert loaded.arg02 == obj3.arg02
 
 def test_persistent_load_all_only_keys(test_redis):
-    p = redisorm.core.Persistent("paco", r=test_redis)
+    p = Persistent("paco", r=test_redis)
     obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj2 = SamplePersistentObject(arg01="hoge", arg02="reversed")
     obj3 = SamplePersistentObject(arg01="hoge", arg02="this is target")
@@ -68,7 +67,7 @@ def test_persistent_load_all_only_keys(test_redis):
     assert obj3.arg02 == next(loaded)
 
 def test_persistent_load_all_only_keys_reverse_true(test_redis):
-    p = redisorm.core.Persistent("paco", r=test_redis)
+    p = Persistent("paco", r=test_redis)
     obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj2 = SamplePersistentObject(arg01="hoge", arg02="reversed")
     obj3 = SamplePersistentObject(arg01="hoge", arg02="this is target")
@@ -81,7 +80,7 @@ def test_persistent_load_all_only_keys_reverse_true(test_redis):
     assert obj1.arg02 == next(loaded)
 
 def test_delete(test_redis):
-    p = redisorm.core.Persistent("paco", r=test_redis)
+    p = Persistent("paco", r=test_redis)
     obj = SamplePersistentObject(arg01="hoge", arg02="fuga")
     p.save(obj)
     assert p.load(SamplePersistentObject, 0) != None
@@ -89,7 +88,7 @@ def test_delete(test_redis):
     assert p.load(SamplePersistentObject, 0) == None
 
 def test_delete2(test_redis):
-    p = redisorm.core.Persistent("paco", r=test_redis)
+    p = Persistent("paco", r=test_redis)
     obj = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj2 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     p.save(obj)

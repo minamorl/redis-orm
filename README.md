@@ -25,14 +25,9 @@ import redisorm.core
 p = redisorm.core.Persistent("prefix")
 
 class Klass(redisorm.core.PersistentData):
-  def __init__(self, id=None, name=None):
-    self.id = id
-    self.name = name
+  id = None
+  name = None
    
-
-# Or you can do this in more easier way (from v0.1.1)
-
-Klass = redisorm.create_model("Klass", id=None, name=None)
 
 #Save stuffs
 k1 = Klass(name="foo")
@@ -83,11 +78,15 @@ However, in a real world, we have to handle various datatypes such as `DateTime`
 ```python
 import datetime
 import redisorm.core
+from redisorm.core import Core
 from redisorm.proxy import DatetimeProxy
 
 p = redisorm.core.Persistent("example")
 
 class SampleObject(redisorm.core.PersistentData):
+  created_at = Column() 
+  id = Column()
+
   def __init__(self, created_at=None, id=None):
     self.id = id
     self.created_at = DatetimeProxy(created_at) or DatetimeProxy(datetime.datetime.now())
@@ -120,6 +119,9 @@ There are several proxies:
 persistent = redisorm.core.Persistent("example")
 
 class User(redisorm.core.PersistentData):
+  id = redisorm.core.Column()
+  memo_list = redisorm.core.Column()
+
   def __init__(self, id=None, user=None):
     self.id = id
     self.memo_list = PersistentListProxy()

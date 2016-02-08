@@ -47,8 +47,7 @@ class SampleModel(redisorm.core.PersistentData):
 
 class SampleChildModel(redisorm.core.PersistentData):
 
-    def __init__(self, id=None):
-        self.id = id
+    id = redisorm.core.Column()
 
 
 def test_persistent_proxy(test_redis):

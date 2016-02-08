@@ -6,11 +6,38 @@ import inspect
 DELETED = "__deleted__"
 
 
-class PersistentData():
+class MetaPersistentData(type):
+
+    def __new__(mcs, name, bases, attrs):
+        # create class temporary
+        cls = super().__new__(mcs, name, bases, attrs)
+        attrs["_columns"] = []
+        for attr in attrs:
+            if attr.startswith("_"):
+                continue
+            if isinstance(cls.__dict__[attr], Column):
+                attrs["_columns"].append(attr)
+        return super().__new__(mcs, name, bases, attrs)
+    
+
+class Column():
+    def __init__(self, type=None, default=None):
+        self.type = type
+        self.default = default
+
+class PersistentData(metaclass=MetaPersistentData):
+
+    def __init__(self, *args, **kwargs):
+        for column in self._columns:
+            self.__dict__[column] = kwargs.get(column, None)
+            
+
+
 
     @classmethod
     def get_columns(cls):
-        return [x for x in inspect.signature(cls.__init__).parameters.values() if str(x) is not "self"]
+        #  return [x for x in inspect.signature(cls.__init__).parameters.values() if str(x) is not "self"]
+        return cls._columns
 
     def before_save(self):
         pass
@@ -67,10 +94,10 @@ class Persistent():
         obj.id = str(obj.id)
 
         for param in params:
-            if getattr(obj, param.name) is not None:
-                r.hset(self.key_separator.join([self.prefix, classname, obj.id]), param.name, getattr(obj, param.name))
+            if obj.__dict__[param] is not None:
+                r.hset(self.key_separator.join([self.prefix, classname, obj.id]), param, getattr(obj, param))
             else:
-                r.hdel(self.key_separator.join([self.prefix, classname, obj.id]), param.name)
+                r.hdel(self.key_separator.join([self.prefix, classname, obj.id]), param)
 
         obj.after_save(obj)
 
@@ -83,8 +110,8 @@ class Persistent():
             return None
 
         params = cls.get_columns()
-        obj = cls(**{param.name: r.hget(self.key_separator.join([self.prefix, classname, key]), param.name) for param in params
-                     if hasattr(param, "name") and param.name != "self" and r.hget(self.key_separator.join([self.prefix, classname, key]), param.name) is not None})
+        obj = cls(**{param: r.hget(self.key_separator.join([self.prefix, classname, key]), param) for param in params
+                     if param != "self" and r.hget(self.key_separator.join([self.prefix, classname, key]), param) is not None})
         obj.after_load()
         return obj
 
