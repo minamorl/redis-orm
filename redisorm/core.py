@@ -9,7 +9,7 @@ DELETED = "__deleted__"
 class MetaPersistentData(type):
 
     def __new__(mcs, name, bases, attrs):
-        # create class temporary
+        # Create temporary class
         cls = super().__new__(mcs, name, bases, attrs)
         attrs["_columns"] = []
         for attr in attrs:
@@ -31,7 +31,7 @@ class PersistentData(metaclass=MetaPersistentData):
 
     def __init__(self, *args, **kwargs):
         for column in self._columns:
-            self.__dict__[column] = kwargs.get(column, None)
+            self.__dict__[column] = kwargs.get(column, self.__class__.__dict__[column].default)
 
     def before_save(self):
         pass

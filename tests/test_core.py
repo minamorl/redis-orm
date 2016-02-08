@@ -108,3 +108,18 @@ def test_delete2(test_redis):
     p.delete(obj)
     assert len(list(p.load_all(SamplePersistentObject))) == 2
     assert list(p.load_all(SamplePersistentObject))[0] == None
+
+
+class SamplePersistentObject2(PersistentData):
+    id = Column()
+    arg01 = Column(default="default")
+    arg02 = Column(default="")
+    arg03 = Column()
+
+
+def test_column_default_value(test_redis):
+    p = Persistent("paco", r=test_redis)
+    obj = SamplePersistentObject2()
+    assert obj.arg01 == "default"
+    assert obj.arg02 == ""
+    assert obj.arg03 == None
