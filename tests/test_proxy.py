@@ -1,5 +1,6 @@
 import datetime
 import redisorm
+from redisorm.core import Column
 from redisorm.proxy import DatetimeProxy, BooleanProxy, PersistentProxy, IntProxy, PersistentListProxy
 import redis
 import pytest
@@ -39,9 +40,8 @@ def test_boolean_proxy():
 
 class SampleModel(redisorm.core.PersistentData):
 
-    def __init__(self, id=None, child=None):
-        self.id = id
-        self.child = PersistentProxy(child)
+    id = Column()
+    child = Column(PersistentProxy)
 
 
 class SampleChildModel(redisorm.core.PersistentData):

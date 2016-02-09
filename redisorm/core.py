@@ -22,8 +22,8 @@ class MetaPersistentData(type):
 
 class Column():
 
-    def __init__(self, type=None, default=None):
-        self.type = type
+    def __init__(self, _type=None, default=None):
+        self._type = _type
         self.default = default
 
 
@@ -31,7 +31,10 @@ class PersistentData(metaclass=MetaPersistentData):
 
     def __init__(self, *args, **kwargs):
         for column in self._columns:
-            self.__dict__[column] = kwargs.get(column, self.__class__.__dict__[column].default)
+            if self.__class__.__dict__[column]._type is None:
+                self.__dict__[column] = kwargs.get(column, self.__class__.__dict__[column].default)
+            else:
+                self.__dict__[column] = self.__class__.__dict__[column]._type(kwargs.get(column, self.__class__.__dict__[column].default))
 
     def before_save(self):
         pass
@@ -106,7 +109,10 @@ class Persistent():
             for column in columns:
                 val = r.hget(self.key_separator.join([self.prefix, classname, key]), column)
                 if column != "self" and val is not None:
-                    yield column, val
+                    if cls.__dict__[column]._type is None:
+                        yield column, val
+                    else:
+                        yield column, cls.__dict__[column]._type(val)
 
         obj = cls(**dict(_load(cls._columns)))
         obj.after_load()
