@@ -103,10 +103,10 @@ class Persistent():
             return None
 
         def _load(columns):
-            for param in columns:
-                val = r.hget(self.key_separator.join([self.prefix, classname, key]), param)
-                if param != "self" and val is not None:
-                    yield param, val
+            for column in columns:
+                val = r.hget(self.key_separator.join([self.prefix, classname, key]), column)
+                if column != "self" and val is not None:
+                    yield column, val
 
         obj = cls(**dict(_load(cls._columns)))
         obj.after_load()
