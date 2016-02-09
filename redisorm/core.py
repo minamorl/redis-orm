@@ -102,8 +102,13 @@ class Persistent():
         if r.hget(self.key_separator.join([self.prefix, classname, key]), DELETED):
             return None
 
-        obj = cls(**{param: r.hget(self.key_separator.join([self.prefix, classname, key]), param) for param in cls._columns
-                     if param != "self" and r.hget(self.key_separator.join([self.prefix, classname, key]), param) is not None})
+        def _load(columns):
+            for param in columns:
+                val = r.hget(self.key_separator.join([self.prefix, classname, key]), param)
+                if param != "self" and val is not None:
+                    yield param, val
+
+        obj = cls(**dict(_load(cls._columns)))
         obj.after_load()
         return obj
 
