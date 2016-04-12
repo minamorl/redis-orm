@@ -1,6 +1,4 @@
-import operator
 import redis
-import inspect
 
 
 DELETED = "__deleted__"
