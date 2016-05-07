@@ -2,7 +2,7 @@ import pytest
 import os
 import redis
 
-from redisorm import PersistentData, Column, types
+from redisorm import Persistent, PersistentData, Column, types
 
 
 @pytest.fixture
@@ -44,3 +44,19 @@ def test_persistent_data_holds_primary_key(test_redis):
         id = Column()
         created_at = Column(types.DateTime)
     assert Example2._primary_key is None
+
+
+def test_persistent_data_save_and_load_with_primary_key(test_redis):
+    import datetime
+    class Example(PersistentData):
+        id = Column()
+        created_at = Column(types.DateTime, primary_key=True, default=lambda: datetime.datetime.now())
+    p = Persistent("example", r=test_redis)
+    example = Example()
+    p.save(example)
+    assert test_redis.lrange("example:Example:__sorted__", 0, -1) == ["0"]
+    p.save(Example())
+    p.save(Example())
+    p.save(Example())
+    p.save(Example())
+    assert test_redis.lrange("example:Example:__sorted__", 0, -1) == ["4", "3", "2", "1", "0"]

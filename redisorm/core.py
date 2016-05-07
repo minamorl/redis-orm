@@ -3,6 +3,7 @@ from . import types
 
 
 DELETED = "__deleted__"
+SORTED = "__sorted__"
 
 
 class RedisOrmException(Exception):
@@ -52,7 +53,11 @@ class PersistentData(metaclass=MetaPersistentData):
 
     def __init__(self, *args, **kwargs):
         for column in self._columns:
-            self.set_column(column, kwargs.get(column, self.__class__.__dict__[column].default))
+            import types
+            if isinstance(self.__class__.__dict__[column].default, types.FunctionType):
+                self.set_column(column, kwargs.get(column, self.__class__.__dict__[column].default()))
+            else:
+                self.set_column(column, kwargs.get(column, self.__class__.__dict__[column].default))
 
     def __getattribute__(self, attr):
         obj = object.__getattribute__(self, attr)
@@ -62,19 +67,6 @@ class PersistentData(metaclass=MetaPersistentData):
         
     def __setattr__(self, name, value):
         self.set_column(name, value)
-
-
-    def before_save(self):
-        pass
-
-    def before_load(self):
-        pass
-
-    def after_save(self, obj):
-        pass
-
-    def after_load(self):
-        pass
 
 
 class Persistent():
@@ -106,18 +98,24 @@ class Persistent():
     def save(self, obj):
         r = self.r
         classname = obj.__class__.__name__
-        obj.before_save()
 
         obj.id = obj.id or self.update_id(obj)
         obj.id = str(obj.id)
 
         for param in obj._columns:
             if obj.__dict__[param] is not None:
-                r.hset(self.key_separator.join([self.prefix, classname, obj.id]), param, getattr(obj, param))
+                if obj.__class__.__dict__[param].type:
+                    r.hset(self.key_separator.join([self.prefix, classname, obj.id]), param, getattr(obj.__class__, param).type(getattr(obj, param)).freeze())
+                else:
+                    r.hset(self.key_separator.join([self.prefix, classname, obj.id]), param, getattr(obj, param))
             else:
                 r.hdel(self.key_separator.join([self.prefix, classname, obj.id]), param)
 
-        obj.after_save(obj)
+        if obj.__class__._primary_key:
+            r.delete(self.key_separator.join([self.prefix, classname, SORTED]))
+            for item in self.load_all(obj.__class__):
+                r.lpush(self.key_separator.join([self.prefix, classname, SORTED]), item.id)
+
 
     def load(self, cls, key):
         key = str(key)
@@ -137,7 +135,6 @@ class Persistent():
                         yield column, cls.__dict__[column].type(val)
 
         obj = cls(**dict(_load(cls._columns)))
-        obj.after_load()
         return obj
 
     def load_all(self, cls, _range=None, reverse=False):
@@ -149,8 +146,15 @@ class Persistent():
                 _range = range(int(max_id), -1, -1)
             else:
                 _range = range(int(max_id) + 1)
-        for i in _range:
-            yield self.load(cls, str(i))
+        if cls._primary_key:
+            kv = list(enumerate(self.load_all_only_keys(cls, cls._primary_key)))
+            if kv is None:
+                return
+            for i, _ in sorted(kv, key=lambda tp: tp[1]):
+                yield self.load(cls, str(i))
+        else:
+            for i in _range:
+                yield self.load(cls, str(i))
 
     def load_all_only_keys(self, cls, key, reverse=False):
         max_id = self.get_max_id(cls)
