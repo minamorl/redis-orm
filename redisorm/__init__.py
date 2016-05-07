@@ -1,4 +1,5 @@
-from . import core, proxy
+from . import core, types
+from .core import Persistent, PersistentData, Column
 
 
 def create_model(__name, **kwargs):

@@ -3,3 +3,4 @@ wrapt
 pytest
 virtualenv
 tox
+python-dateutil

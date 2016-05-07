@@ -1,7 +1,12 @@
 import redis
+from . import types
 
 
 DELETED = "__deleted__"
+
+
+class RedisOrmException(Exception):
+    pass
 
 
 class MetaPersistentData(type):
@@ -10,29 +15,54 @@ class MetaPersistentData(type):
         # Create temporary class
         cls = super().__new__(mcs, name, bases, attrs)
         attrs["_columns"] = []
+        attrs["_primary_key"] = None
         for attr in attrs:
             if attr.startswith("_"):
                 continue
             if isinstance(cls.__dict__[attr], Column):
+                if cls.__dict__[attr].primary_key:
+                    if attrs["_primary_key"]:
+                        raise RedisOrmException("PersistentData should have only one primary key.")
+                    attrs["_primary_key"] = attr
+
                 attrs["_columns"].append(attr)
         return super().__new__(mcs, name, bases, attrs)
 
 
 class Column():
 
-    def __init__(self, _type=None, default=None):
-        self._type = _type
+    def __init__(self, type=None, default=None, primary_key=False):
+        self.type = type
         self.default = default
+        self.primary_key = False
+        if primary_key:
+            if self.type.__orderable__:
+                self.primary_key = primary_key
+            else:
+                raise RedisOrmException()
 
 
 class PersistentData(metaclass=MetaPersistentData):
 
+    def set_column(self, column, obj):
+        if self.__class__.__dict__[column].type is None or isinstance(obj, self.__class__.__dict__[column].type):
+            self.__dict__[column] = obj
+        else:
+            self.__dict__[column] = self.__class__.__dict__[column].type(obj)
+
     def __init__(self, *args, **kwargs):
         for column in self._columns:
-            if self.__class__.__dict__[column]._type is None:
-                self.__dict__[column] = kwargs.get(column, self.__class__.__dict__[column].default)
-            else:
-                self.__dict__[column] = self.__class__.__dict__[column]._type(kwargs.get(column, self.__class__.__dict__[column].default))
+            self.set_column(column, kwargs.get(column, self.__class__.__dict__[column].default))
+
+    def __getattribute__(self, attr):
+        obj = object.__getattribute__(self, attr)
+        if isinstance(obj, types.RedisType):
+            return obj.obj
+        return obj
+        
+    def __setattr__(self, name, value):
+        self.set_column(name, value)
+
 
     def before_save(self):
         pass
@@ -45,12 +75,6 @@ class PersistentData(metaclass=MetaPersistentData):
 
     def after_load(self):
         pass
-
-    def __str__(self):
-        return str(self.id)
-
-    def __repr__(self):
-        return str(self.id)
 
 
 class Persistent():
@@ -107,10 +131,10 @@ class Persistent():
             for column in columns:
                 val = r.hget(self.key_separator.join([self.prefix, classname, key]), column)
                 if column != "self" and val is not None:
-                    if cls.__dict__[column]._type is None:
+                    if cls.__dict__[column].type is None:
                         yield column, val
                     else:
-                        yield column, cls.__dict__[column]._type(val)
+                        yield column, cls.__dict__[column].type(val)
 
         obj = cls(**dict(_load(cls._columns)))
         obj.after_load()
