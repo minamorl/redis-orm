@@ -17,7 +17,7 @@ def test_redis():
 def test_column_casts_type_correctly(test_redis):
     class Example(PersistentData):
         id = Column()
-        created_at = Column(types.DateTime, primary_key=True)
+        created_at = Column(types.DateTime, index_key=True)
     example = Example(id=0, created_at='2011-11-03 18:21:26')
     assert not isinstance(example.created_at, types.DateTime)
     example.created_at = types.DateTime('2011-11-03 18:21:26')
@@ -28,31 +28,31 @@ def test_column_casts_type_correctly(test_redis):
 
 
 @pytest.mark.xfail
-def test_persistent_data_has_only_one_primary_key(test_redis):
+def test_persistent_data_has_only_one_index_key(test_redis):
     class Example(PersistentData):
         id = Column()
-        created_at = Column(types.DateTime, primary_key=True)
-        created_at2 = Column(types.DateTime, primary_key=True)
+        created_at = Column(types.DateTime, index_key=True)
+        created_at2 = Column(types.DateTime, index_key=True)
 
 
-def test_persistent_data_holds_primary_key(test_redis):
+def test_persistent_data_holds_index_key(test_redis):
     class Example1(PersistentData):
         id = Column()
-        created_at = Column(types.DateTime, primary_key=True)
-    assert Example1._primary_key == "created_at"
+        created_at = Column(types.DateTime, index_key=True)
+    assert Example1._index_key == "created_at"
 
     class Example2(PersistentData):
         id = Column()
         created_at = Column(types.DateTime)
-    assert Example2._primary_key is None
+    assert Example2._index_key is None
 
 
-def test_persistent_data_save_and_load_with_primary_key(test_redis):
+def test_persistent_data_save_and_load_with_index_key(test_redis):
     import datetime
 
     class Example(PersistentData):
         id = Column()
-        created_at = Column(types.DateTime, primary_key=True, default="2016-05-08 00:00:00")
+        created_at = Column(types.DateTime, index_key=True, default="2016-05-08 00:00:00")
     p = Persistent("example", r=test_redis)
     example = Example()
     p.save(example)

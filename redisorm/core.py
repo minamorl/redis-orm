@@ -16,15 +16,15 @@ class MetaPersistentData(type):
         # Create temporary class
         cls = super().__new__(mcs, name, bases, attrs)
         attrs["_columns"] = []
-        attrs["_primary_key"] = None
+        attrs["_index_key"] = None
         for attr in attrs:
             if attr.startswith("_"):
                 continue
             if isinstance(cls.__dict__[attr], Column):
-                if cls.__dict__[attr].primary_key:
-                    if attrs["_primary_key"]:
-                        raise RedisOrmException("PersistentData should have only one primary key.")
-                    attrs["_primary_key"] = attr
+                if cls.__dict__[attr].index_key:
+                    if attrs["_index_key"]:
+                        raise RedisOrmException("PersistentData should have only one index key.")
+                    attrs["_index_key"] = attr
 
                 attrs["_columns"].append(attr)
         return super().__new__(mcs, name, bases, attrs)
@@ -32,13 +32,13 @@ class MetaPersistentData(type):
 
 class Column():
 
-    def __init__(self, type=None, default=None, primary_key=False):
+    def __init__(self, type=None, default=None, index_key=False):
         self.type = type
         self.default = default
-        self.primary_key = False
-        if primary_key:
+        self.index_key = False
+        if index_key:
             if self.type.__orderable__:
-                self.primary_key = primary_key
+                self.index_key = index_key
             else:
                 raise RedisOrmException()
 
@@ -112,7 +112,7 @@ class Client():
             else:
                 r.hdel(self.key_separator.join([self.prefix, classname, obj.id]), param)
 
-        if obj.__class__._primary_key:
+        if obj.__class__._index_key:
             r.delete(self.key_separator.join([self.prefix, classname, SORTED]))
             for item in self.load_all(obj.__class__):
                 r.rpush(self.key_separator.join([self.prefix, classname, SORTED]), item.id)
@@ -137,7 +137,7 @@ class Client():
         obj = cls(**dict(_load(cls._columns)))
         return obj
 
-    def load_all(self, cls, _range=None, reverse=False, ignore_primary_key=False):
+    def load_all(self, cls, _range=None, reverse=False, ignore_index_key=False):
         max_id = self.get_max_id(cls)
         if max_id is None:
             return
@@ -146,9 +146,9 @@ class Client():
                 _range = range(int(max_id), -1, -1)
             else:
                 _range = range(int(max_id) + 1)
-        if cls._primary_key and not ignore_primary_key:
-            k = self.load_all_only_keys(cls, "id", ignore_primary_key=True)
-            v = self.load_all_only_keys(cls, cls._primary_key, ignore_primary_key=True)
+        if cls._index_key and not ignore_index_key:
+            k = self.load_all_only_keys(cls, "id", ignore_index_key=True)
+            v = self.load_all_only_keys(cls, cls._index_key, ignore_index_key=True)
             kv = zip(k, v)
             if kv is None:
                 return
@@ -158,8 +158,8 @@ class Client():
             for i in _range:
                 yield self.load(cls, str(i))
 
-    def load_all_only_keys(self, cls, key, reverse=False, ignore_primary_key=False):
-        if ignore_primary_key or cls._primary_key is None:
+    def load_all_only_keys(self, cls, key, reverse=False, ignore_index_key=False):
+        if ignore_index_key or cls._index_key is None:
             max_id = self.get_max_id(cls)
             classname = cls.__name__
             if max_id is None:
@@ -170,8 +170,8 @@ class Client():
             for i in _range:
                 yield self.r.hget(self.key_separator.join([self.prefix, classname, str(i)]), key)
         else:
-            k = self.load_all_only_keys(cls, cls._primary_key, ignore_primary_key=True)
-            v = self.load_all_only_keys(cls, key, ignore_primary_key=True)
+            k = self.load_all_only_keys(cls, cls._index_key, ignore_index_key=True)
+            v = self.load_all_only_keys(cls, key, ignore_index_key=True)
             kv = zip(k, v)
             for _, val in sorted(kv, key=lambda tp: tp[0]):
                 yield val

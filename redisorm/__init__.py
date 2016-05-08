@@ -1,5 +1,5 @@
 from . import core, types
-from .core import Persistent, PersistentData, Column
+from .core import *
 
 
 def create_model(__name, **kwargs):
