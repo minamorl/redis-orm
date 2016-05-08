@@ -64,12 +64,12 @@ class PersistentData(metaclass=MetaPersistentData):
         if isinstance(obj, types.RedisType):
             return obj.obj
         return obj
-        
+
     def __setattr__(self, name, value):
         self.set_column(name, value)
 
 
-class Persistent():
+class Client():
 
     def __init__(self, prefix, key_separator=":", id_count="__latest__", r=None):
         self.prefix = prefix
@@ -116,7 +116,6 @@ class Persistent():
             r.delete(self.key_separator.join([self.prefix, classname, SORTED]))
             for item in self.load_all(obj.__class__):
                 r.rpush(self.key_separator.join([self.prefix, classname, SORTED]), item.id)
-
 
     def load(self, cls, key):
         key = str(key)
@@ -205,3 +204,5 @@ class Persistent():
         if obj.id is None:
             return False
         return self.r.hset(self.key_separator.join([self.prefix, classname, obj.id]), DELETED, "1")
+
+Persistent = Client
