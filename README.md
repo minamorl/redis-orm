@@ -65,14 +65,37 @@ All object are automatically converted into `str`, and all `id` is managed by `p
 
 By default, `prefix:Klass:__latest__` holds last inserted id, and others are hashed objects composed from argument names of `__init__` functions.
 
-## Restriction
+## Types
+
+In the latest release, we introduced `types` modules. According to this implementation, redisorm can set a *type* on each column.
+
+Let's get started. Consider what we defined:
+```python
+class Example(redisorm.PersistentData):
+  id = Column()
+  message = Column(type=redisorm.types.String)
+  created_at = Column(type=redisorm.types.DateTime, default=lambda: datetime.datetime.now())
+```
+
+```
+example = Example()
+
+# returns datetime object, which value is defined as a creation time.
+example.created_at 
+```
+
+
+
+## Proxies[obsolated]
+
+This module support has been dropped since latest major release of redis-orm.
+Use new `redisorm.types` moduleds instead of this.
+
+### Restriction
 
 All kwargs of `__init__` function which derived from `PersistentData` classes must be string representable except for `self`, and they also must have default values.
 
 However, in a real world, we have to handle various datatypes such as `DateTime`, `int`, `Boolean`, and so on. If you need to handle those types without thinking about casting, you can use proxy objects.
-
-## Proxies
-
 
 ### DatetimeProxy
 ```python
