@@ -2,7 +2,7 @@ class RedisType:
     __orderable__ = False
 
     def __init__(self, obj):
-        if not isinstance(obj, type(self)):
+        if not isinstance(obj, type(self)) and obj is not None:
             obj = self.parse(obj)
         self.obj = obj
 

@@ -46,7 +46,7 @@ class Column():
 class PersistentData(metaclass=MetaPersistentData):
 
     def set_column(self, column, obj):
-        if self.__class__.__dict__[column].type is None or isinstance(obj, self.__class__.__dict__[column].type) or obj is None:
+        if self.__class__.__dict__[column].type is None or isinstance(obj, self.__class__.__dict__[column].type):
             self.__dict__[column] = obj
         else:
             self.__dict__[column] = self.__class__.__dict__[column].type(obj)

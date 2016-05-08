@@ -95,9 +95,9 @@ def test_delete(test_redis):
     p = Persistent("example", r=test_redis)
     obj = SamplePersistentObject(arg01="hoge", arg02="fuga")
     p.save(obj)
-    assert p.load(SamplePersistentObject, 0) != None
+    assert p.load(SamplePersistentObject, 0) is not None
     p.delete(obj)
-    assert p.load(SamplePersistentObject, 0) == None
+    assert p.load(SamplePersistentObject, 0) is None
 
 
 def test_delete2(test_redis):
@@ -108,7 +108,7 @@ def test_delete2(test_redis):
     p.save(obj2)
     p.delete(obj)
     assert len(list(p.load_all(SamplePersistentObject))) == 2
-    assert list(p.load_all(SamplePersistentObject))[0] == None
+    assert list(p.load_all(SamplePersistentObject))[0] is None
 
 
 class SamplePersistentObject2(PersistentData):
@@ -123,13 +123,24 @@ def test_column_default_value(test_redis):
     obj = SamplePersistentObject2()
     assert obj.arg01 == "default"
     assert obj.arg02 == ""
-    assert obj.arg03 == None
+    assert obj.arg03 is None
 
 
 def test_type_can_be_set_on_id_column(test_redis):
     p = Persistent("example", r=test_redis)
+
     class Example(PersistentData):
         id = Column(type=types.Integer)
     p.save(Example())
     assert isinstance(p.load(Example, 0).id, int)
 
+
+def test_types(test_redis):
+    class Example(PersistentData):
+        id = Column(type=types.Integer)
+        message = Column(type=types.String)
+    example = Example()
+    example.id = "1"
+    example.message = "message"
+    assert isinstance(example.id, int)
+    assert isinstance(example.message, str)
