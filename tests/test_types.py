@@ -16,4 +16,7 @@ def test_type_int():
     assert types.Integer("123").freeze() == "123"
 
 
-
+def test_type_boolean():
+    assert types.Boolean(True).freeze() == "True"
+    assert types.Boolean("False").freeze() == "False"
+    assert types.Boolean(False).freeze() == "False"

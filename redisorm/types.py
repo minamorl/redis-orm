@@ -47,3 +47,14 @@ class DateTime(RedisType):
 
     def freeze(self):
         return self.obj.strftime("%Y-%m-%d %H:%M:%S")
+
+class Boolean(RedisType):
+
+    @classmethod
+    def parse(cls, string):
+        if isinstance(string, bool):
+            return string
+        return "True" == string
+
+    def freeze(self):
+        return str(self.obj)
