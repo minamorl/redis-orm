@@ -67,24 +67,30 @@ By default, `prefix:Klass:__latest__` holds last inserted id, and others are has
 
 ## Types
 
-In the latest release, we introduced `types` modules. According to this implementation, redisorm can set a *type* on each column.
+In the latest release, we introduced `types` modules that handles casting python types and redis' raw string. According to this implementation, redisorm can handles any types in addition to `str`. To use this, set a *type* on each column.
 
 Let's get started. Consider what we defined:
 ```python
-class Example(redisorm.PersistentData):
-  id = Column()
-  message = Column(type=redisorm.types.String)
-  created_at = Column(type=redisorm.types.DateTime, default=lambda: datetime.datetime.now())
+class Example(PersistentData):
+    id = Column(type=types.Integer)
+    message = Column(type=types.String)
 ```
+
+And then:
 
 ```
 example = Example()
-
-# returns datetime object, which value is defined as a creation time.
-example.created_at 
+example.id = "1"
+example.message = "message"
+assert isinstance(example.id, int)
+assert isinstance(example.message, str)
 ```
 
+As you can see, all column objects are automatically casted when an assignment is execuated.
 
+## Index Key
+
+(documentation is wip)
 
 ## Proxies[obsolated]
 
