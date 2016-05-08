@@ -13,6 +13,10 @@ class RedisType:
     def freeze(self):
         return self.obj
 
+    def __str__(self):
+        return self.freeze()
+
+
 
 class String(RedisType):
     pass

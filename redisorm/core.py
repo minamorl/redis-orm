@@ -46,7 +46,7 @@ class Column():
 class PersistentData(metaclass=MetaPersistentData):
 
     def set_column(self, column, obj):
-        if self.__class__.__dict__[column].type is None or isinstance(obj, self.__class__.__dict__[column].type):
+        if self.__class__.__dict__[column].type is None or isinstance(obj, self.__class__.__dict__[column].type) or obj is None:
             self.__dict__[column] = obj
         else:
             self.__dict__[column] = self.__class__.__dict__[column].type(obj)
@@ -105,7 +105,8 @@ class Persistent():
         for param in obj._columns:
             if obj.__dict__[param] is not None:
                 if obj.__class__.__dict__[param].type:
-                    r.hset(self.key_separator.join([self.prefix, classname, obj.id]), param, getattr(obj.__class__, param).type(getattr(obj, param)).freeze())
+                    key = self.key_separator.join([self.prefix, classname, str(obj.id)])
+                    r.hset(key, param, getattr(obj.__class__, param).type(getattr(obj, param)).freeze())
                 else:
                     r.hset(self.key_separator.join([self.prefix, classname, obj.id]), param, getattr(obj, param))
             else:
@@ -147,7 +148,9 @@ class Persistent():
             else:
                 _range = range(int(max_id) + 1)
         if cls._primary_key and not ignore_primary_key:
-            kv = list(enumerate(self.load_all_only_keys(cls, cls._primary_key, ignore_primary_key=True)))
+            k = self.load_all_only_keys(cls, "id", ignore_primary_key=True)
+            v = self.load_all_only_keys(cls, cls._primary_key, ignore_primary_key=True)
+            kv = zip(k, v)
             if kv is None:
                 return
             for i, _ in sorted(kv, key=lambda tp: tp[1]):

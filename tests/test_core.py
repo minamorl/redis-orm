@@ -1,4 +1,5 @@
 from redisorm.core import *
+from redisorm import types
 import os
 import pytest
 import redis
@@ -14,11 +15,11 @@ def test_redis():
 
 
 def test_persistent_prefix():
-    Persistent("paco")
+    Persistent("example")
 
 
 def test_persistent_set_redis(test_redis):
-    Persistent("paco", r=test_redis)
+    Persistent("example", r=test_redis)
 
 
 class SamplePersistentObject(PersistentData):
@@ -28,7 +29,7 @@ class SamplePersistentObject(PersistentData):
 
 
 def test_persistent_basic_save_and_load(test_redis):
-    p = Persistent("paco", r=test_redis)
+    p = Persistent("example", r=test_redis)
     obj = SamplePersistentObject(arg01="hoge", arg02="fuga")
     p.save(obj)
     loaded = p.load(SamplePersistentObject, 0)
@@ -37,7 +38,7 @@ def test_persistent_basic_save_and_load(test_redis):
 
 
 def test_persistent_auto_increment_id(test_redis):
-    p = Persistent("paco", r=test_redis)
+    p = Persistent("example", r=test_redis)
     obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj2 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj3 = SamplePersistentObject(arg01="hoge", arg02="fuga")
@@ -50,7 +51,7 @@ def test_persistent_auto_increment_id(test_redis):
 
 
 def test_persistent_find_by(test_redis):
-    p = Persistent("paco", r=test_redis)
+    p = Persistent("example", r=test_redis)
     obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj2 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj3 = SamplePersistentObject(arg01="hoge", arg02="this is target")
@@ -63,7 +64,7 @@ def test_persistent_find_by(test_redis):
 
 
 def test_persistent_load_all_only_keys(test_redis):
-    p = Persistent("paco", r=test_redis)
+    p = Persistent("example", r=test_redis)
     obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj2 = SamplePersistentObject(arg01="hoge", arg02="reversed")
     obj3 = SamplePersistentObject(arg01="hoge", arg02="this is target")
@@ -77,7 +78,7 @@ def test_persistent_load_all_only_keys(test_redis):
 
 
 def test_persistent_load_all_only_keys_reverse_true(test_redis):
-    p = Persistent("paco", r=test_redis)
+    p = Persistent("example", r=test_redis)
     obj1 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj2 = SamplePersistentObject(arg01="hoge", arg02="reversed")
     obj3 = SamplePersistentObject(arg01="hoge", arg02="this is target")
@@ -91,7 +92,7 @@ def test_persistent_load_all_only_keys_reverse_true(test_redis):
 
 
 def test_delete(test_redis):
-    p = Persistent("paco", r=test_redis)
+    p = Persistent("example", r=test_redis)
     obj = SamplePersistentObject(arg01="hoge", arg02="fuga")
     p.save(obj)
     assert p.load(SamplePersistentObject, 0) != None
@@ -100,7 +101,7 @@ def test_delete(test_redis):
 
 
 def test_delete2(test_redis):
-    p = Persistent("paco", r=test_redis)
+    p = Persistent("example", r=test_redis)
     obj = SamplePersistentObject(arg01="hoge", arg02="fuga")
     obj2 = SamplePersistentObject(arg01="hoge", arg02="fuga")
     p.save(obj)
@@ -118,8 +119,17 @@ class SamplePersistentObject2(PersistentData):
 
 
 def test_column_default_value(test_redis):
-    p = Persistent("paco", r=test_redis)
+    p = Persistent("example", r=test_redis)
     obj = SamplePersistentObject2()
     assert obj.arg01 == "default"
     assert obj.arg02 == ""
     assert obj.arg03 == None
+
+
+def test_type_can_be_set_on_id_column(test_redis):
+    p = Persistent("example", r=test_redis)
+    class Example(PersistentData):
+        id = Column(type=types.Integer)
+    p.save(Example())
+    assert isinstance(p.load(Example, 0).id, int)
+

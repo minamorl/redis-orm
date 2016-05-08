@@ -13,3 +13,7 @@ def test_type_string():
 
 def test_type_int():
     assert types.Integer(123).freeze() == "123"
+    assert types.Integer("123").freeze() == "123"
+
+
+
