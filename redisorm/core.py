@@ -205,4 +205,17 @@ class Client():
             return False
         return self.r.hset(self.key_separator.join([self.prefix, classname, obj.id]), DELETED, "1")
 
+# backword compatible
 Persistent = Client
+
+
+def create_model(__name, **kwargs):
+    attrs = {}
+
+    for key, val in kwargs.items():
+        if not isinstance(val, Column):
+            raise RedisOrmException("create_model args can only accepts instance of Column.")
+        attrs[key] = val
+
+    cls = type(__name, (PersistentData, ), attrs)
+    return cls

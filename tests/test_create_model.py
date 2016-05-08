@@ -1,4 +1,4 @@
-import redisorm
+from redisorm import Column, Client, create_model
 import os
 import pytest
 import redis
@@ -14,8 +14,8 @@ def test_redis():
 
 
 def test_create_model(test_redis):
-    p = redisorm.core.Persistent("paco", r=test_redis)
-    UserModel = redisorm.create_model("UserModel", id=None, name=None, nome=None, same=None, ghwaeaoigew=None)
+    p = Client("paco", r=test_redis)
+    UserModel = create_model("UserModel", id=Column(), name=Column())
     user = UserModel(name="John")
     p.save(user)
     assert p.load(UserModel, 0).name == "John"
