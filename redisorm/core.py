@@ -114,7 +114,7 @@ class Persistent():
         if obj.__class__._primary_key:
             r.delete(self.key_separator.join([self.prefix, classname, SORTED]))
             for item in self.load_all(obj.__class__):
-                r.lpush(self.key_separator.join([self.prefix, classname, SORTED]), item.id)
+                r.rpush(self.key_separator.join([self.prefix, classname, SORTED]), item.id)
 
 
     def load(self, cls, key):
@@ -137,7 +137,7 @@ class Persistent():
         obj = cls(**dict(_load(cls._columns)))
         return obj
 
-    def load_all(self, cls, _range=None, reverse=False):
+    def load_all(self, cls, _range=None, reverse=False, ignore_primary_key=False):
         max_id = self.get_max_id(cls)
         if max_id is None:
             return
@@ -146,8 +146,8 @@ class Persistent():
                 _range = range(int(max_id), -1, -1)
             else:
                 _range = range(int(max_id) + 1)
-        if cls._primary_key:
-            kv = list(enumerate(self.load_all_only_keys(cls, cls._primary_key)))
+        if cls._primary_key and not ignore_primary_key:
+            kv = list(enumerate(self.load_all_only_keys(cls, cls._primary_key, ignore_primary_key=True)))
             if kv is None:
                 return
             for i, _ in sorted(kv, key=lambda tp: tp[1]):
@@ -156,16 +156,23 @@ class Persistent():
             for i in _range:
                 yield self.load(cls, str(i))
 
-    def load_all_only_keys(self, cls, key, reverse=False):
-        max_id = self.get_max_id(cls)
-        classname = cls.__name__
-        if max_id is None:
-            return
-        _range = range(int(max_id) + 1)
-        if reverse is True:
-            _range = range(int(max_id), -1, -1)
-        for i in _range:
-            yield self.r.hget(self.key_separator.join([self.prefix, classname, str(i)]), key)
+    def load_all_only_keys(self, cls, key, reverse=False, ignore_primary_key=False):
+        if ignore_primary_key or cls._primary_key is None:
+            max_id = self.get_max_id(cls)
+            classname = cls.__name__
+            if max_id is None:
+                return
+            _range = range(int(max_id) + 1)
+            if reverse is True:
+                _range = range(int(max_id), -1, -1)
+            for i in _range:
+                yield self.r.hget(self.key_separator.join([self.prefix, classname, str(i)]), key)
+        else:
+            k = self.load_all_only_keys(cls, cls._primary_key, ignore_primary_key=True)
+            v = self.load_all_only_keys(cls, key, ignore_primary_key=True)
+            kv = zip(k, v)
+            for _, val in sorted(kv, key=lambda tp: tp[0]):
+                yield val
 
     def find(self, cls, cond):
         for item in self.load_all(cls):

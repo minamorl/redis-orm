@@ -3,12 +3,13 @@ import pytest
 
 
 def test_type_datetime():
-    types.DateTime('2011-11-03 18:21:26')
+    dt = types.DateTime('2011-11-03 18:21:26')
+    assert '2011-11-03 18:21:26' == dt.freeze()
 
 
 def test_type_string():
-    types.String('This is a test.')
+    assert types.String('This is a test.').freeze() == "This is a test."
 
 
 def test_type_int():
-    types.Integer(123)
+    assert types.Integer(123).freeze() == "123"
