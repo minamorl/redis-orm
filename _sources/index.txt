@@ -11,7 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   intro
+   overview
+   getting_started
    types
    index_key
 
