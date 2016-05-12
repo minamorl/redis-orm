@@ -85,6 +85,7 @@ default values. You can also pass a custom redis instance::
   redisorm.Client(r=r)
 
 Then::
+
   client.save(person)
   
 That's it.
