@@ -10,7 +10,7 @@ class RedisOrmException(Exception):
     pass
 
 
-class MetaPersistentData(type):
+class MetaModel(type):
 
     def __new__(mcs, name, bases, attrs):
         # Create temporary class
@@ -23,7 +23,7 @@ class MetaPersistentData(type):
             if isinstance(cls.__dict__[attr], Column):
                 if cls.__dict__[attr].index_key:
                     if attrs["_index_key"]:
-                        raise RedisOrmException("PersistentData should have only one index key.")
+                        raise RedisOrmException("Model should have only one index key.")
                     attrs["_index_key"] = attr
 
                 attrs["_columns"].append(attr)
@@ -43,7 +43,7 @@ class Column():
                 raise RedisOrmException()
 
 
-class PersistentData(metaclass=MetaPersistentData):
+class Model(metaclass=MetaModel):
 
     def set_column(self, column, obj):
         if self.__class__.__dict__[column].type is None or isinstance(obj, self.__class__.__dict__[column].type):
@@ -207,6 +207,8 @@ class Client():
 
 # backword compatible
 Persistent = Client
+MetaPersistentData = MetaModel
+PersistentData = Model
 
 
 def create_model(__name, **kwargs):
@@ -217,5 +219,5 @@ def create_model(__name, **kwargs):
             raise RedisOrmException("create_model args can only accepts instance of Column.")
         attrs[key] = val
 
-    cls = type(__name, (PersistentData, ), attrs)
+    cls = type(__name, (Model, ), attrs)
     return cls
