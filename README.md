@@ -27,6 +27,6 @@ obj = Person(name="John")
 cl.save(obj)
 ```
 
-See [documentations](minamorl.github.io/redis-orm)
+See [documentations](http://minamorl.github.io/redis-orm/).
 ## Author
 minamorl
