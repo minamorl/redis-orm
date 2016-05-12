@@ -120,14 +120,10 @@ default values. You can also pass a custom redis instance:</p>
 <div class="section" id="loading-from-redis">
 <h3>Loading from redis<a class="headerlink" href="#loading-from-redis" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">Client.load_all</span></code> yields all instances from existing data in Redis.</p>
-<dl class="docutils">
-<dt>::</dt>
-<dd><dl class="first last docutils">
-<dt>for person from client.load_all(Person):</dt>
-<dd>print(person.name)</dd>
-</dl>
-</dd>
-</dl>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">person</span> <span class="kn">from</span> <span class="nn">client.load_all</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Or you can specify the id to <code class="docutils literal"><span class="pre">Cient.load</span></code> and get the instance:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">Person</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>

@@ -96,6 +96,7 @@ Loading from redis
 ``Client.load_all`` yields all instances from existing data in Redis.
 
 ::
+
   for person from client.load_all(Person):
       print(person.name)
 
