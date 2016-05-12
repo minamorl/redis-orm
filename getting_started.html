@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; redis-orm 0.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="redis-orm 0.3.1 documentation" href="index.html" />
+    <link rel="next" title="Types" href="types.html" />
+    <link rel="prev" title="Overview" href="overview.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="download">
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="install-via-pip-recommended">
+<h3>Install via pip (recommended)<a class="headerlink" href="#install-via-pip-recommended" title="Permalink to this headline">¶</a></h3>
+<p>You can install redis-orm using pip</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pip install redis-orm
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-manually">
+<h3>Install manually<a class="headerlink" href="#install-manually" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ git clone https://github.com/minamorl/redis-orm/
+$ <span class="nb">cd</span> redis-orm <span class="o">&amp;&amp;</span> python setup.py install
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="create-a-model">
+<h2>Create a model<a class="headerlink" href="#create-a-model" title="Permalink to this headline">¶</a></h2>
+<p>To create a model, you have to create a class that inherits
+<code class="docutils literal"><span class="pre">redisorm.Model</span></code>. Below is an example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">redisorm</span> <span class="k">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Column</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">()</span>
+    <span class="n">address</span> <span class="o">=</span> <span class="n">Column</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Or you can simply use <code class="docutils literal"><span class="pre">redisorm.create_model</span></code> helper to create
+a class:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">redisorm</span> <span class="k">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Column</span>
+
+<span class="n">Person</span> <span class="o">=</span> <span class="n">redisorm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(),</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(),</span>
+    <span class="n">address</span> <span class="o">=</span> <span class="n">Column</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Make sure that <cite>id</cite> column is set. This is important because
+redis-orm looks up all instance with ids. If <cite>id</cite> column is missing,
+redis-orm will be not able to find your models. This is important behavior.</p>
+</div>
+<div class="section" id="save-and-load">
+<h2>Save and Load<a class="headerlink" href="#save-and-load" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-an-instance">
+<h3>Create an instance<a class="headerlink" href="#create-an-instance" title="Permalink to this headline">¶</a></h3>
+<p>You can create an instance from a Model-derived class.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Usually, you should not set the <cite>id</cite> column.</p>
+</div>
+<div class="section" id="save-an-instance">
+<h3>Save an instance<a class="headerlink" href="#save-an-instance" title="Permalink to this headline">¶</a></h3>
+<p>First, you shoud create an instance of <code class="docutils literal"><span class="pre">redisorm.Client</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">redisorm</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">redisorm</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>By the default, redis-orm creates an instance of redis with a
+default values. You can also pass a custom redis instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">redis</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">StrictRedis</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">32123</span><span class="p">,</span> <span class="n">decode_responses</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">redisorm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Then::</dt>
+<dd>client.save(person)</dd>
+</dl>
+<p>That&#8217;s it.</p>
+</div>
+<div class="section" id="loading-from-redis">
+<h3>Loading from redis<a class="headerlink" href="#loading-from-redis" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">Client.load_all</span></code> yields all instances from existing data in Redis.</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd><dl class="first last docutils">
+<dt>for person from client.load_all(Person):</dt>
+<dd>print(person.name)</dd>
+</dl>
+</dd>
+</dl>
+<p>Or you can specify the id to <code class="docutils literal"><span class="pre">Cient.load</span></code> and get the instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">Person</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started</a><ul>
+<li><a class="reference internal" href="#download">Download</a><ul>
+<li><a class="reference internal" href="#install-via-pip-recommended">Install via pip (recommended)</a></li>
+<li><a class="reference internal" href="#install-manually">Install manually</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#create-a-model">Create a model</a></li>
+<li><a class="reference internal" href="#save-and-load">Save and Load</a><ul>
+<li><a class="reference internal" href="#create-an-instance">Create an instance</a></li>
+<li><a class="reference internal" href="#save-an-instance">Save an instance</a></li>
+<li><a class="reference internal" href="#loading-from-redis">Loading from redis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="overview.html" title="previous chapter">Overview</a></li>
+      <li>Next: <a href="types.html" title="next chapter">Types</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/getting_started.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, minamorl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/getting_started.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
