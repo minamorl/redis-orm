@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>redisorm package &mdash; redis-orm 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="redis-orm 0.3.0 documentation" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="redisorm-package">
+<h1>redisorm package<a class="headerlink" href="#redisorm-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-redisorm.core">
+<span id="redisorm-core-module"></span><h2>redisorm.core module<a class="headerlink" href="#module-redisorm.core" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="redisorm.core.Client">
+<em class="property">class </em><code class="descclassname">redisorm.core.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>prefix</em>, <em>key_separator=':'</em>, <em>id_count='__latest__'</em>, <em>r=None</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="redisorm.core.Client.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="redisorm.core.Client.find">
+<code class="descname">find</code><span class="sig-paren">(</span><em>cls</em>, <em>cond</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.find" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="redisorm.core.Client.find_by">
+<code class="descname">find_by</code><span class="sig-paren">(</span><em>cls</em>, <em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.find_by" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="redisorm.core.Client.get_last_insert_id">
+<code class="descname">get_last_insert_id</code><span class="sig-paren">(</span><em>classname</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.get_last_insert_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="redisorm.core.Client.get_max_id">
+<code class="descname">get_max_id</code><span class="sig-paren">(</span><em>cls</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.get_max_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="redisorm.core.Client.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>cls</em>, <em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="redisorm.core.Client.load_all">
+<code class="descname">load_all</code><span class="sig-paren">(</span><em>cls</em>, <em>_range=None</em>, <em>reverse=False</em>, <em>ignore_index_key=False</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.load_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="redisorm.core.Client.load_all_only_keys">
+<code class="descname">load_all_only_keys</code><span class="sig-paren">(</span><em>cls</em>, <em>key</em>, <em>reverse=False</em>, <em>ignore_index_key=False</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.load_all_only_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="redisorm.core.Client.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="redisorm.core.Client.set_id">
+<code class="descname">set_id</code><span class="sig-paren">(</span><em>classname</em>, <em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.set_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="redisorm.core.Client.update_id">
+<code class="descname">update_id</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Client.update_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="redisorm.core.Column">
+<em class="property">class </em><code class="descclassname">redisorm.core.</code><code class="descname">Column</code><span class="sig-paren">(</span><em>type=None</em>, <em>default=None</em>, <em>index_key=False</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.Column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="redisorm.core.MetaPersistentData">
+<em class="property">class </em><code class="descclassname">redisorm.core.</code><code class="descname">MetaPersistentData</code><a class="headerlink" href="#redisorm.core.MetaPersistentData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">type</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="redisorm.core.Persistent">
+<code class="descclassname">redisorm.core.</code><code class="descname">Persistent</code><a class="headerlink" href="#redisorm.core.Persistent" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#redisorm.core.Client" title="redisorm.core.Client"><code class="xref py py-class docutils literal"><span class="pre">Client</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="redisorm.core.PersistentData">
+<em class="property">class </em><code class="descclassname">redisorm.core.</code><code class="descname">PersistentData</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.PersistentData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="redisorm.core.PersistentData.set_column">
+<code class="descname">set_column</code><span class="sig-paren">(</span><em>column</em>, <em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.PersistentData.set_column" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="redisorm.core.RedisOrmException">
+<em class="property">exception </em><code class="descclassname">redisorm.core.</code><code class="descname">RedisOrmException</code><a class="headerlink" href="#redisorm.core.RedisOrmException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="redisorm.core.create_model">
+<code class="descclassname">redisorm.core.</code><code class="descname">create_model</code><span class="sig-paren">(</span><em>__name</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.core.create_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-redisorm.types">
+<span id="redisorm-types-module"></span><h2>redisorm.types module<a class="headerlink" href="#module-redisorm.types" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="redisorm.types.Boolean">
+<em class="property">class </em><code class="descclassname">redisorm.types.</code><code class="descname">Boolean</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.Boolean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#redisorm.types.RedisType" title="redisorm.types.RedisType"><code class="xref py py-class docutils literal"><span class="pre">redisorm.types.RedisType</span></code></a></p>
+<dl class="method">
+<dt id="redisorm.types.Boolean.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.Boolean.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="redisorm.types.Boolean.parse">
+<em class="property">classmethod </em><code class="descname">parse</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.Boolean.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="redisorm.types.DateTime">
+<em class="property">class </em><code class="descclassname">redisorm.types.</code><code class="descname">DateTime</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.DateTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#redisorm.types.RedisType" title="redisorm.types.RedisType"><code class="xref py py-class docutils literal"><span class="pre">redisorm.types.RedisType</span></code></a></p>
+<dl class="method">
+<dt id="redisorm.types.DateTime.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.DateTime.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="redisorm.types.DateTime.parse">
+<em class="property">classmethod </em><code class="descname">parse</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.DateTime.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="redisorm.types.Integer">
+<em class="property">class </em><code class="descclassname">redisorm.types.</code><code class="descname">Integer</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.Integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#redisorm.types.RedisType" title="redisorm.types.RedisType"><code class="xref py py-class docutils literal"><span class="pre">redisorm.types.RedisType</span></code></a></p>
+<dl class="method">
+<dt id="redisorm.types.Integer.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.Integer.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="redisorm.types.Integer.parse">
+<em class="property">classmethod </em><code class="descname">parse</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.Integer.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="redisorm.types.RedisType">
+<em class="property">class </em><code class="descclassname">redisorm.types.</code><code class="descname">RedisType</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.RedisType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="redisorm.types.RedisType.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.RedisType.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="redisorm.types.RedisType.parse">
+<em class="property">classmethod </em><code class="descname">parse</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.RedisType.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="redisorm.types.String">
+<em class="property">class </em><code class="descclassname">redisorm.types.</code><code class="descname">String</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#redisorm.types.String" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#redisorm.types.RedisType" title="redisorm.types.RedisType"><code class="xref py py-class docutils literal"><span class="pre">redisorm.types.RedisType</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-redisorm">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-redisorm" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">redisorm package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-redisorm.core">redisorm.core module</a></li>
+<li><a class="reference internal" href="#module-redisorm.types">redisorm.types module</a></li>
+<li><a class="reference internal" href="#module-redisorm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apis/redisorm.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, minamorl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/apis/redisorm.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
