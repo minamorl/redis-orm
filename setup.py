@@ -9,7 +9,7 @@ setup(
     packages=find_packages(),
     tests_require=['tox'],
     install_requires=[
-        "wrapt",
         "redis",
+        "python-dateutil",
     ]
 )
