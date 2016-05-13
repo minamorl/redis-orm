@@ -6,12 +6,12 @@ Redis is a fast, reliable, very simple key-value store. But there's a problem: r
 
 **redisorm(redis-orm)** provides orm-like feature. Like pickle module, it makes your class instances persistent in a beautiful way::
 
-    from redisorm import Client, PersistentData, Column
+    from redisorm import Client, Model, Column
 
 
     p = Client("prefix")
 
-    class Klass(PersistentData):
+    class Klass(Model):
       id = Column()
       name = Column()
 
