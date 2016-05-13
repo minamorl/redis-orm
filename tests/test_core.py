@@ -85,7 +85,9 @@ def test_persistent_load_all_only_keys_reverse_true(test_redis):
     p.save(obj1)
     p.save(obj2)
     p.save(obj3)
-    loaded = p.load_all_only_keys(SamplePersistentObject, "arg02", reverse=True)
+    loaded = p.load_all_only_keys(SamplePersistentObject,
+                                  "arg02",
+                                  reverse=True)
     assert obj3.arg02 == next(loaded)
     assert obj2.arg02 == next(loaded)
     assert obj1.arg02 == next(loaded)
@@ -131,6 +133,7 @@ def test_type_can_be_set_on_id_column(test_redis):
 
     class Example(PersistentData):
         id = Column(type=types.Integer)
+
     p.save(Example())
     assert isinstance(p.load(Example, 0).id, int)
 
@@ -139,6 +142,7 @@ def test_types(test_redis):
     class Example(PersistentData):
         id = Column(type=types.Integer)
         message = Column(type=types.String)
+
     example = Example()
     example.id = "1"
     example.message = "message"

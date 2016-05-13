@@ -18,6 +18,7 @@ def test_column_casts_type_correctly(test_redis):
     class Example(PersistentData):
         id = Column()
         created_at = Column(types.DateTime, index_key=True)
+
     example = Example(id=0, created_at='2011-11-03 18:21:26')
     assert not isinstance(example.created_at, types.DateTime)
     example.created_at = types.DateTime('2011-11-03 18:21:26')
@@ -39,11 +40,13 @@ def test_persistent_data_holds_index_key(test_redis):
     class Example1(PersistentData):
         id = Column()
         created_at = Column(types.DateTime, index_key=True)
+
     assert Example1._index_key == "created_at"
 
     class Example2(PersistentData):
         id = Column()
         created_at = Column(types.DateTime)
+
     assert Example2._index_key is None
 
 
@@ -52,7 +55,10 @@ def test_persistent_data_save_and_load_with_index_key(test_redis):
 
     class Example(PersistentData):
         id = Column()
-        created_at = Column(types.DateTime, index_key=True, default="2016-05-08 00:00:00")
+        created_at = Column(types.DateTime,
+                            index_key=True,
+                            default="2016-05-08 00:00:00")
+
     p = Persistent("example", r=test_redis)
     example = Example()
     p.save(example)
@@ -61,6 +67,9 @@ def test_persistent_data_save_and_load_with_index_key(test_redis):
     p.save(Example(created_at="2016-05-08 02:00:00"))
     p.save(Example(created_at="2016-05-08 05:00:00"))
     p.save(Example(created_at="2016-05-08 04:00:00"))
-    assert test_redis.lrange("example:Example:__sorted__", 0, -1) == ["0", "1", "2", "4", "3"]
-    assert [str(item.id) for item in p.load_all(Example)] == ["0", "1", "2", "4", "3"]
-    assert [item for item in p.load_all_only_keys(Example, "id")] == ["0", "1", "2", "4", "3"]
+    assert test_redis.lrange("example:Example:__sorted__", 0, -
+                             1) == ["0", "1", "2", "4", "3"]
+    assert [str(item.id)
+            for item in p.load_all(Example)] == ["0", "1", "2", "4", "3"]
+    assert [item for item in p.load_all_only_keys(Example, "id")
+            ] == ["0", "1", "2", "4", "3"]
