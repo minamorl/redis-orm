@@ -6,7 +6,7 @@ In the latest release, we introduced types modules that handles casting python t
 
 Let's get started. Consider what we defined::
 
-  class Example(PersistentData):
+  class Example(Model):
       id = Column(type=types.Integer)
       message = Column(type=types.String)
 

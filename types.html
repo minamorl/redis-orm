@@ -44,7 +44,7 @@
 <h1>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h1>
 <p>In the latest release, we introduced types modules that handles casting python types and redis&#8217; raw string. According to this implementation, redisorm can handles any types in addition to str. To use this, set a type on each column.</p>
 <p>Let&#8217;s get started. Consider what we defined:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Example</span><span class="p">(</span><span class="n">PersistentData</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Example</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
     <span class="n">message</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
 </pre></div>

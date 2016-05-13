@@ -44,12 +44,12 @@
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
 <p>Redis is a fast, reliable, very simple key-value store. But there&#8217;s a problem: redis-py&#8217;s interface is not well-designed.</p>
 <p><strong>redisorm(redis-orm)</strong> provides orm-like feature. Like pickle module, it makes your class instances persistent in a beautiful way:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">redisorm</span> <span class="k">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">PersistentData</span><span class="p">,</span> <span class="n">Column</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">redisorm</span> <span class="k">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Column</span>
 
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s2">&quot;prefix&quot;</span><span class="p">)</span>
 
-<span class="k">class</span> <span class="nc">Klass</span><span class="p">(</span><span class="n">PersistentData</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Klass</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
   <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">()</span>
   <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">()</span>
 </pre></div>

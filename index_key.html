@@ -42,7 +42,7 @@
   <div class="section" id="index-key">
 <h1>Index Key<a class="headerlink" href="#index-key" title="Permalink to this headline">¶</a></h1>
 <p>Index key is a new feature for sorting user data. Now redis-orm performs like SQL. If index key is set, Redis-ORM automatically creates special __sorted__ key, which contains a list of ordered object ids. When load_all method is called, the method yields objects in a prepared order:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Example</span><span class="p">(</span><span class="n">PersistentData</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Example</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">()</span>
     <span class="n">created_at</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">index_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 

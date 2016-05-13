@@ -4,7 +4,7 @@ Index Key
 
 Index key is a new feature for sorting user data. Now redis-orm performs like SQL. If index key is set, Redis-ORM automatically creates special __sorted__ key, which contains a list of ordered object ids. When load_all method is called, the method yields objects in a prepared order::
 
-  class Example(PersistentData):
+  class Example(Model):
       id = Column()
       created_at = Column(types.DateTime, index_key=True)
 
