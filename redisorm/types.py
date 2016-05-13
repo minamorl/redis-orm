@@ -17,7 +17,6 @@ class RedisType:
         return self.freeze()
 
 
-
 class String(RedisType):
     pass
 
@@ -43,13 +42,12 @@ class DateTime(RedisType):
         if isinstance(string, datetime.datetime):
             return string
         return dateutil.parser.parse(string)
-        
 
     def freeze(self):
         return self.obj.strftime("%Y-%m-%d %H:%M:%S")
 
-class Boolean(RedisType):
 
+class Boolean(RedisType):
     @classmethod
     def parse(cls, string):
         if isinstance(string, bool):
