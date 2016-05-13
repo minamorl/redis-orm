@@ -55,7 +55,9 @@ clean:
 
 .PHONY: html
 html:
+	sphinx-apidoc -f -o apis ../redisorm
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	touch _build/html/.nojekyll
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
