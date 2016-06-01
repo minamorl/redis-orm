@@ -109,8 +109,8 @@ def test_delete2(test_redis):
     p.save(obj)
     p.save(obj2)
     p.delete(obj)
-    assert len(list(p.load_all(SamplePersistentObject))) == 2
-    assert list(p.load_all(SamplePersistentObject))[0] is None
+    assert len(list(p.load_all(SamplePersistentObject))) == 1
+    assert list(p.load_all(SamplePersistentObject))[0] is not None
 
 
 class SamplePersistentObject2(PersistentData):

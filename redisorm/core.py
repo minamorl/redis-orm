@@ -180,10 +180,14 @@ class Client():
             if kv is None:
                 return
             for i, _ in sorted(kv, key=lambda tp: tp[1]):
-                yield self.load(cls, str(i))
+                obj = self.load(cls, str(i))
+                if obj is not None:
+                    yield obj
         else:
             for i in _range:
-                yield self.load(cls, str(i))
+                obj = self.load(cls, str(i))
+                if obj is not None:
+                    yield obj
 
     def load_all_only_keys(
             self, cls, key,
