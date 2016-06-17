@@ -75,6 +75,7 @@ def test_persistent_load_all_only_keys(test_redis):
     assert obj1.arg02 == next(loaded)
     assert obj2.arg02 == next(loaded)
     assert obj3.arg02 == next(loaded)
+    # test when deletion
     p.delete(obj2)
     loaded = p.load_all_only_keys(SamplePersistentObject, "arg02")
     assert obj1.arg02 == next(loaded)
