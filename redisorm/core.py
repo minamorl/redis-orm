@@ -202,9 +202,14 @@ class Client():
             if reverse is True:
                 _range = range(int(max_id), -1, -1)
             for i in _range:
-                yield self.r.hget(
+                obj = self.r.hget(
                     self.key_separator.join([self.prefix, classname, str(i)]),
                     key)
+                obj_deleted_flag = self.r.hget(
+                    self.key_separator.join([self.prefix, classname, str(i)]),
+                    DELETED)
+                if obj_deleted_flag is None:
+                    yield obj
         else:
             k = self.load_all_only_keys(
                 cls, cls._index_key, ignore_index_key=True)
